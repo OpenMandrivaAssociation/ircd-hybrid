@@ -54,17 +54,17 @@ Development headers and libraries for %{name}
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
+#%patch1 -p1
 
 # Clear all before start
-rm -rf `find -type d -name autom4te.cache`
-mv -f autoconf/{configure.in,acconfig.h} .
+#rm -rf `find -type d -name autom4te.cache`
+#mv -f autoconf/{configure.in,acconfig.h} .
 
 %build
 # change dir for other automake
-cp -f %{_datadir}/automake-1.7/config.* autoconf
-%{__aclocal}
-%{__autoconf}
+#cp -f %{_datadir}/automake-1.7/config.* autoconf
+#%{__aclocal}
+#%{__autoconf}
 
 %serverbuild
 %configure2_5x \
