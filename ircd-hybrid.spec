@@ -134,19 +134,9 @@ for link in topic accept cjoin cmode admin names links away whowas \
 	done
 cd ..
 
-#cd messages
-#	install ayb.mo $RPM_BUILD_ROOT%{_messagesdir}/ayb/LC_MESSAGES/ircd-hybrid.mo
-#	install custom.mo $RPM_BUILD_ROOT%{_messagesdir}/custom/LC_MESSAGES/ircd-hybrid.mo
-#cd translations
-#	make
-#	for m in ./*.mo; do \
-#	    LNAME=`echo $m | sed 's/^\.\///' | sed 's/\.mo$//'`; \
-#	    if test ! -d $RPM_BUILD_ROOT%{_messagesdir}/${LNAME}/LC_MESSAGES/; then \
-#		mkdir -p $RPM_BUILD_ROOT%{_messagesdir}/${LNAME}/LC_MESSAGES/; \
-#		cp $m "$RPM_BUILD_ROOT%{_messagesdir}/${LNAME}/LC_MESSAGES/ircd-hybrid.mo"; \
-#	    fi; \
-#	done
-#cd ../..
+cd messages
+	install *.lang $RPM_BUILD_ROOT%{_messagesdir}
+cd ..
 
 %multiarch_binaries $RPM_BUILD_ROOT%_includedir/%{name}/*.h
 
