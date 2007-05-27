@@ -86,7 +86,7 @@ install -d $RPM_BUILD_ROOT{%{_libdir}/ircd-hybrid,%{_var}/{log/ircd-hybrid,run/i
 
 install src/ircd $RPM_BUILD_ROOT%{_sbindir}/ircd-hybrid
 install servlink/servlink $RPM_BUILD_ROOT%{_sbindir}/servlink
-install doc/*.conf $RPM_BUILD_ROOT%{_sysconfdir}/ircd-hybrid
+install etc/*.conf $RPM_BUILD_ROOT%{_sysconfdir}/ircd-hybrid
 # which conf file we need?
 %if %{with_EFnet}
 	mv $RPM_BUILD_ROOT%{_sysconfdir}/ircd-hybrid/example.efnet.conf $RPM_BUILD_ROOT%{_sysconfdir}/ircd-hybrid/ircd.conf
@@ -95,8 +95,8 @@ install doc/*.conf $RPM_BUILD_ROOT%{_sysconfdir}/ircd-hybrid
 	mv $RPM_BUILD_ROOT%{_sysconfdir}/ircd-hybrid/simple.conf $RPM_BUILD_ROOT%{_sysconfdir}/ircd-hybrid/ircd.conf
 	rm $RPM_BUILD_ROOT%{_sysconfdir}/ircd-hybrid/example.efnet.conf
 %endif
-mv $RPM_BUILD_ROOT%{_sysconfdir}/ircd-hybrid/convertconf-example.conf $RPM_BUILD_ROOT%{_sysconfdir}/ircd-hybrid/.convertconf-example.conf
-install doc/ircd.motd $RPM_BUILD_ROOT%{_sysconfdir}/ircd-hybrid
+#mv $RPM_BUILD_ROOT%{_sysconfdir}/ircd-hybrid/convertconf-example.conf $RPM_BUILD_ROOT%{_sysconfdir}/ircd-hybrid/.convertconf-example.conf
+#install doc/ircd.motd $RPM_BUILD_ROOT%{_sysconfdir}/ircd-hybrid
 install doc/ircd.8 $RPM_BUILD_ROOT%{_mandir}/man8
 install include/*.h $RPM_BUILD_ROOT%{_includedir}/%{name}
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/ircd-hybrid
@@ -112,11 +112,11 @@ cd ..
 
 # make this to have ircservices support
 cd contrib
-	make m_tburst.so ; cp m_tburst.so $RPM_BUILD_ROOT%{_libdir}/ircd-hybrid/modules/autoload
+	make ; install *.so $RPM_BUILD_ROOT%{_libdir}/ircd-hybrid/modules
 cd ..
 
 cd tools
-	for i in convertconf convertilines convertklines encspeed mkkeypair mkpasswd untabify viconf; do
+	for i in encspeed mkkeypair mkpasswd untabify; do
 		install $i $RPM_BUILD_ROOT%{_libdir}/ircd-hybrid/tools/$i
 	done
 cd ..
@@ -134,19 +134,19 @@ for link in topic accept cjoin cmode admin names links away whowas \
 	done
 cd ..
 
-cd messages
-	install ayb.mo $RPM_BUILD_ROOT%{_messagesdir}/ayb/LC_MESSAGES/ircd-hybrid.mo
-	install custom.mo $RPM_BUILD_ROOT%{_messagesdir}/custom/LC_MESSAGES/ircd-hybrid.mo
-cd translations
-	make
-	for m in ./*.mo; do \
-	    LNAME=`echo $m | sed 's/^\.\///' | sed 's/\.mo$//'`; \
-	    if test ! -d $RPM_BUILD_ROOT%{_messagesdir}/${LNAME}/LC_MESSAGES/; then \
-		mkdir -p $RPM_BUILD_ROOT%{_messagesdir}/${LNAME}/LC_MESSAGES/; \
-		cp $m "$RPM_BUILD_ROOT%{_messagesdir}/${LNAME}/LC_MESSAGES/ircd-hybrid.mo"; \
-	    fi; \
-	done
-cd ../..
+#cd messages
+#	install ayb.mo $RPM_BUILD_ROOT%{_messagesdir}/ayb/LC_MESSAGES/ircd-hybrid.mo
+#	install custom.mo $RPM_BUILD_ROOT%{_messagesdir}/custom/LC_MESSAGES/ircd-hybrid.mo
+#cd translations
+#	make
+#	for m in ./*.mo; do \
+#	    LNAME=`echo $m | sed 's/^\.\///' | sed 's/\.mo$//'`; \
+#	    if test ! -d $RPM_BUILD_ROOT%{_messagesdir}/${LNAME}/LC_MESSAGES/; then \
+#		mkdir -p $RPM_BUILD_ROOT%{_messagesdir}/${LNAME}/LC_MESSAGES/; \
+#		cp $m "$RPM_BUILD_ROOT%{_messagesdir}/${LNAME}/LC_MESSAGES/ircd-hybrid.mo"; \
+#	    fi; \
+#	done
+#cd ../..
 
 %multiarch_binaries $RPM_BUILD_ROOT%_includedir/%{name}/*.h
 
@@ -182,7 +182,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/{*.txt,server-version-info,technical} Hybrid-team LICENSE BUGS RELNOTES TODO
 %attr(755,root,root) %{_sbindir}/*
 %attr(755,ircd-hybrid,ircd-hybrid) %dir %{_sysconfdir}/ircd-hybrid
-%attr(644,ircd-hybrid,ircd-hybrid) %config(noreplace) %{_sysconfdir}/ircd-hybrid/.convertconf-example.conf
+#%attr(644,ircd-hybrid,ircd-hybrid) %config(noreplace) %{_sysconfdir}/ircd-hybrid/.convertconf-example.conf
 %attr(644,ircd-hybrid,ircd-hybrid) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/ircd-hybrid/*
 %attr(644,root,root) %config(noreplace) %{_sysconfdir}/logrotate.d/ircd-hybrid
 %attr(644,root,root) %config(noreplace) %{_sysconfdir}/sysconfig/ircd-hybrid
