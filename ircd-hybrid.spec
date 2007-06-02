@@ -1,6 +1,6 @@
 %define name ircd-hybrid
 %define version 7.2.2
-%define release %mkrel 1
+%define release %mkrel 2
 %define _messagesdir %{_libdir}/ircd-hybrid/messages
 
 # default: Don't build with IPv6 for production server
@@ -35,6 +35,8 @@ BuildRequires:	flex
 BuildRequires:	openssl-devel	>= 0.9.7
 BuildRequires:	zlib-devel
 BuildRequires:	elfutils-devel
+# Both have a 
+Conflicts:	ircd
 
 %package	devel
 Summary:		Development headers for %{name}
@@ -97,7 +99,7 @@ install etc/*.conf $RPM_BUILD_ROOT%{_sysconfdir}/ircd-hybrid
 %endif
 #mv $RPM_BUILD_ROOT%{_sysconfdir}/ircd-hybrid/convertconf-example.conf $RPM_BUILD_ROOT%{_sysconfdir}/ircd-hybrid/.convertconf-example.conf
 #install doc/ircd.motd $RPM_BUILD_ROOT%{_sysconfdir}/ircd-hybrid
-install doc/ircd.8 $RPM_BUILD_ROOT%{_mandir}/man8
+install doc/ircd.8 $RPM_BUILD_ROOT%{_mandir}/man8/ircd-hybrid.8
 install include/*.h $RPM_BUILD_ROOT%{_includedir}/%{name}
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/ircd-hybrid
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/ircd-hybrid
