@@ -1,6 +1,6 @@
 %define name ircd-hybrid
 %define version 7.2.2
-%define release %mkrel 2
+%define release %mkrel 3
 %define _messagesdir %{_libdir}/ircd-hybrid/messages
 
 # default: Don't build with IPv6 for production server
@@ -25,8 +25,7 @@ Source2:	%{name}.sysconfig
 Source3:	%{name}.logrotate
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-opt.patch
-Provides:	ircd
-PreReq:		rpm-helper /usr/sbin/update-alternatives
+Requires(post,postun):		rpm-helper /usr/sbin/update-alternatives
 BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
 BuildRequires:	autoconf
 BuildRequires:	automake
