@@ -25,6 +25,8 @@ Source2:	%{name}.sysconfig
 Source3:	%{name}.logrotate
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-opt.patch
+# fwang: patch2 from debian
+Patch2:		%{name}-7.2.3-flex-and-bison.patch
 Requires(post,postun):		rpm-helper /usr/sbin/update-alternatives
 BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
 BuildRequires:	autoconf
@@ -56,6 +58,7 @@ Development headers and libraries for %{name}
 %setup -q
 %patch0 -p1
 #%patch1 -p1
+%patch2 -p0
 
 # Clear all before start
 #rm -rf `find -type d -name autom4te.cache`
