@@ -58,7 +58,7 @@ Development headers and libraries for %{name}
 %setup -q
 %patch0 -p1
 #%patch1 -p1
-%patch2 -p0
+#patch2 -p0
 
 # Clear all before start
 #rm -rf `find -type d -name autom4te.cache`
