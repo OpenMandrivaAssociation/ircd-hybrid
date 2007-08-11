@@ -31,8 +31,6 @@ Requires(post,postun):		rpm-helper /usr/sbin/update-alternatives
 BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	bison
-BuildRequires:	flex
 BuildRequires:	openssl-devel	>= 0.9.7
 BuildRequires:	zlib-devel
 BuildRequires:	elfutils-devel
