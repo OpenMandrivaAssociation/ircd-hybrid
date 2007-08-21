@@ -27,7 +27,7 @@ Patch0:		%{name}-config.patch
 Patch1:		%{name}-opt.patch
 # fwang: patch2 from debian
 Patch2:		%{name}-7.2.3-flex-and-bison.patch
-Requires(post,postun):		rpm-helper /usr/sbin/update-alternatives
+Requires(post,postun):		rpm-helper update-alternatives
 BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
 BuildRequires:	autoconf
 BuildRequires:	automake
