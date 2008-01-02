@@ -27,6 +27,7 @@ Patch0:		%{name}-config.patch
 Patch1:		%{name}-opt.patch
 Patch3:		%{name}-7.2.3-fix-x86_64-build.patch
 Requires(post,postun):		rpm-helper update-alternatives
+BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	openssl-devel	>= 0.9.7
