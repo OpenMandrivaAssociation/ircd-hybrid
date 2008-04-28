@@ -1,6 +1,6 @@
 %define name ircd-hybrid
 %define version 7.2.3
-%define release %mkrel 4
+%define release %mkrel 5
 %define _messagesdir %{_libdir}/ircd-hybrid/messages
 
 # default: Don't build with IPv6 for production server
@@ -26,6 +26,7 @@ Source3:	%{name}.logrotate
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-opt.patch
 Patch3:		%{name}-7.2.3-fix-x86_64-build.patch
+Patch4:		%{name}-7.2.3-fix-module-path.patch
 Requires(post,postun):		rpm-helper update-alternatives
 BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
 BuildRequires:	autoconf
@@ -57,6 +58,7 @@ Development headers and libraries for %{name}
 #%patch1 -p1
 #patch2 -p0
 %patch3 -p0
+%patch4 -p0
 
 # Clear all before start
 #rm -rf `find -type d -name autom4te.cache`
@@ -151,9 +153,6 @@ cd ..
 %create_ghostfile /var/log/ircd-hybrid/oper.log ircd-hybrid ircd-hybrid 0644
 %create_ghostfile /var/log/ircd-hybrid/foper.log ircd-hybrid ircd-hybrid 0644
 update-alternatives --install %{_sbindir}/ircd ircd %{_sbindir}/ircd-hybrid 10
-# use hardlinks
-ln %{_libdir}/ircd-hybrid/tools/viconf %{_libdir}/ircd-hybrid/tools/vimotd
-ln %{_libdir}/ircd-hybrid/tools/viconf %{_libdir}/ircd-hybrid/tools/viklines
 
 %preun
 %_preun_service ircd-hybrid
