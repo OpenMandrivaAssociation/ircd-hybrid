@@ -85,7 +85,7 @@ Development headers and libraries for %{name}
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_libdir}/ircd-hybrid,%{_var}/{log/ircd-hybrid,run/ircd-hybrid},%{_sysconfdir}/{ircd-hybrid,rc.d/init.d,sysconfig,logrotate.d}} \
-	$RPM_BUILD_ROOT{%{_libdir}/ircd-hybrid/{modules{,/autoload},tools,help},%{_sbindir},%{_mandir}/man8,%{_localstatedir}/ircd-hybrid} \
+	$RPM_BUILD_ROOT{%{_libdir}/ircd-hybrid/{modules{,/autoload},tools,help},%{_sbindir},%{_mandir}/man8,%{_localstatedir}/lib/ircd-hybrid} \
 	$RPM_BUILD_ROOT{%{_includedir}/%{name},%{_messagesdir},%{_messagesdir}/{ayb{,/LC_MESSAGES},custom{,/LC_MESSAGES}}}
 
 install src/ircd $RPM_BUILD_ROOT%{_sbindir}/ircd-hybrid
@@ -145,7 +145,7 @@ cd ..
 %multiarch_binaries $RPM_BUILD_ROOT%_includedir/%{name}/*.h
 
 %pre
-%_pre_useradd ircd-hybrid %{_localstatedir}/ircd-hybrid /bin/false
+%_pre_useradd ircd-hybrid %{_localstatedir}/lib/ircd-hybrid /bin/false
 
 %post
 %_post_service ircd-hybrid
@@ -184,7 +184,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/ircd-hybrid/help
 %dir %{_messagesdir}
 %{_messagesdir}/*
-%attr(755,ircd-hybrid,ircd-hybrid) %dir %{_localstatedir}/ircd-hybrid
+%attr(755,ircd-hybrid,ircd-hybrid) %dir %{_localstatedir}/lib/ircd-hybrid
 %attr(755,root,root) %{_libdir}/ircd-hybrid/modules/*
 %attr(755,root,root) %{_libdir}/ircd-hybrid/tools/*
 %attr(755,root,root) %{_libdir}/ircd-hybrid/help/*
