@@ -27,6 +27,7 @@ Patch0:		%{name}-config.patch
 Patch1:		%{name}-opt.patch
 Patch3:		%{name}-7.2.3-fix-x86_64-build.patch
 Patch4:		%{name}-7.2.3-fix-module-path.patch
+Patch5:		ircd-hybrid-7.2.3-fix-str-fmt.patch
 Requires(post,postun):		rpm-helper update-alternatives
 BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
 BuildRequires:	autoconf
@@ -59,6 +60,7 @@ Development headers and libraries for %{name}
 #patch2 -p0
 %patch3 -p0
 %patch4 -p0
+%patch5 -p0
 
 # Clear all before start
 #rm -rf `find -type d -name autom4te.cache`
@@ -80,7 +82,7 @@ Development headers and libraries for %{name}
 	--with-maxclients=512 \
 	%{?_with_ipv6:--enable-ipv6} \
 	%{?_with_efnet:--enable-efnet}
-%{__make}
+%make
 
 %install
 rm -rf $RPM_BUILD_ROOT
