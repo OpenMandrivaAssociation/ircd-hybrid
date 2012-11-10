@@ -1,0 +1,20 @@
+--- src/lex.yy.c.orig	2007-08-27 06:05:10.000000000 +0800
++++ src/lex.yy.c	2007-08-27 06:05:46.000000000 +0800
+@@ -8,7 +8,7 @@
+ #if defined(__FreeBSD__)
+ #include <sys/cdefs.h>
+ #else
+-#define __unused
++#define __my_unused
+ #endif
+ 
+ #define FLEX_SCANNER
+@@ -247,7 +247,7 @@
+ YY_BUFFER_STATE yy_scan_bytes YY_PROTO(( yyconst char *bytes, int len ));
+ 
+ static void *yy_flex_alloc YY_PROTO(( yy_size_t ));
+-static void *yy_flex_realloc YY_PROTO(( void *, yy_size_t )) __unused;
++static void *yy_flex_realloc YY_PROTO(( void *, yy_size_t )) __my_unused;
+ static void yy_flex_free YY_PROTO(( void * ));
+ 
+ #define yy_new_buffer yy_create_buffer

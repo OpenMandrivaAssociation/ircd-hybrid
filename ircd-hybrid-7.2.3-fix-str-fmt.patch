@@ -1,0 +1,11 @@
+--- src/restart.c.str	2010-04-28 03:15:16.000000000 +0200
++++ src/restart.c	2010-04-28 03:15:28.000000000 +0200
+@@ -79,7 +79,7 @@
+     sendto_one(target_p, ":%s ERROR :%s", me.name, buffer);
+   }
+ 
+-  ilog(L_NOTICE, buffer);
++  ilog(L_NOTICE, "%s", buffer);
+ 
+   send_queued_all();
+   close_fds(NULL);

@@ -1,0 +1,279 @@
+diff -ur ircd-hybrid-7.2.2.old/etc/simple.conf ircd-hybrid-7.2.2/etc/simple.conf
+--- ircd-hybrid-7.2.2.old/etc/simple.conf	2007-05-27 17:55:17.000000000 +0800
++++ ircd-hybrid-7.2.2/etc/simple.conf	2007-05-27 18:08:20.000000000 +0800
+@@ -11,10 +11,26 @@
+ # and hub.
+ 
+ serverinfo {
+-	name = "irc.example.com";
+-	sid = "_CHANGE_ME_";
+-	description = "Test IRC Server";
++	name="some-a.server";
++	description="Server IRC";
++	network_name="ExampleNet";
++	network_desc="Example Network";
+ 	hub = no;
++	#vhost="80.49.102.140";
++	#vhost6="3ffe:80e8:546::2";
++	#max_clients=512;
++        /* rsa key: the path to the file containing our rsa key for cryptlink.
++         *
++         * Example command to store a 2048 bit RSA keypair in
++         * rsa.key, and the public key in rsa.pub:
++         *
++         *      openssl genrsa -out rsa.key 2048
++         *      openssl rsa -in rsa.key -pubout -out rsa.pub
++         *      chown <ircd-user>.<ircd.group> rsa.key rsa.pub
++         *      chmod 0600 rsa.key
++         *      chmod 0644 rsa.pub
++         */
++        #rsa_private_key_file="/etc/ircd-hybrid/rsa.key";
+ };
+ 
+ # The administrator block sets up the server administrator information,
+@@ -22,9 +38,9 @@
+ # are required.
+ 
+ administrator {
+-	description = "Example, Inc Test IRC Server";
+-	name = "John Doe";
+-	email = "jdoe@example.com";
++        description="IRC Operator";
++        name="antic";
++        email="antic@tuchow.one.pl";
+ };
+ 
+ # Class blocks define the "privileges" that clients and servers get when they
+@@ -33,20 +49,28 @@
+ 
+ class {
+ 	name = "users";
+-	ping_time = 90;
+-	number_per_ip = 0;
++	ping_time = 90 seconds;
++	number_per_ip = 4;
+ 	max_number = 200;
+ 	sendq = 100000;
+ };
+ 
+ class {
+ 	name = "opers";
+-	ping_time = 90;
+-	number_per_ip = 0;
++	ping_time = 90 seconds;
++	number_per_ip = 4;
+ 	max_number = 10;
+ 	sendq = 500000;
+ };
+ 
++class {
++        name="server";
++        ping_time=5 minutes;
++        connectfreq=15 minutes;
++        max_number=5;
++        sendq=1 megabytes;
++};
++
+ # Auth blocks define who can connect and what class they are put into.
+ 
+ auth {
+@@ -57,13 +81,22 @@
+ # Operator blocks define who is able to use the OPER command and become IRC
+ # operators. The necessary fields are the user@host, oper nick name, and
+ # the password, encrypted with the mkpasswd program provided.
++# /usr/lib/ircd-hybrid/tools/mkpasswd
+ 
+ operator {
+-	name = "JohnDoe";
+-	user = "*@*.example.com";
+-	password = "yl9xlY019Bbfc";
+-	encrypted = yes;
+-	class = "opers";
++        name="op_user";
++	user="op_user@127.0.0.1";
++        password="nZtmzjqsTUXwM";
++        class="opers";
++	global_kill=yes;
++        remote=yes;
++        kline=yes;
++        unkline=yes;
++        gline=yes;
++        die=yes;
++        rehash=yes;
++        nick_changes=yes;
++        admin=yes;
+ };
+ 
+ # Listen blocks define what ports your server will listen to client and
+@@ -71,24 +104,24 @@
+ # hosted machines.)
+ 
+ listen {
+-	port = 6667;
+-};
+-
+-# Quarantine blocks deny certain nicknames from being used.
+-
+-quarantine {
+-	nick = "dcc-*";
+-	reason = "DCC bots are not permitted on this server";
+-};
+-
+-quarantine {
+-	nick = "LamestBot";
+-	reason = "You have to be kidding me!";
+-};
+-
+-quarantine {
+-	nick = "NickServ";
+-	reason = "There are no Nick Services on this Network";
++        /* port: the specific port to listen on.  if no host is specified
++         * before, it will listen on all available IPs.
++         *
++         * ports are seperated via a comma, a range may be specified using ".."
++         */
++
++        /* port: listen on all available IPs, ports 6665 to 6669 */
++         #port=6665 .. 6669;
++
++        /* host: set a specific IP/host the ports after the line will listen
++         * on.  This may be ipv4 or ipv6.
++         */
++         #host="1.2.3.4";
++         #port=7000, 7001;
++
++         #host="aaa:bbb:ccc:dddd:eee::111";
++         #port=7002;
++	 port=6667;
+ };
+ 
+ # The general block contains most of the configurable options that were once
+@@ -107,9 +140,96 @@
+ 	max_nick_time = 20;
+ 	max_nick_changes = 5;
+ 	
++	/* ts delta: the time delta allowed between server clocks before
++	* a warning is given, or before the link is dropped.  all servers
++	* should run ntpdate/rdate to keep clocks in sync
++	*/
++	#ts_warn_delta=800 seconds;
++	#ts_max_delta=60 minutes;
++	fname_userlog="/var/log/ircd-hybrid/user.log";
++	fname_operlog="/var/log/ircd-hybrid/oper.log";
++	fname_foperlog="/var/log/ircd-hybrid/foper.log";			
++	# servlink_path="/usr/sbin/servlink";
++
+ 	# Show extra warnings when servers connections cannot succeed
+ 	# because of no "N" line (a misconfigured connect block)
+ 	warn_no_nline = yes;
+ };
+ 
++logging {
++        /* log level: the amount of detail to log in ircd.log.  The
++        * higher, the more information is logged.  May be changed
++        * once the server is running via /quote SET LOG.  Either:
++        * L_CRIT, L_ERROR, L_WARN, L_NOTICE, L_TRACE, L_INFO or L_DEBUG
++        */
++        log_level=L_NOTICE;
++};
++						    
+ # There are many more configurable options.  See example.conf for the rest
++# /usr/share/doc/ircd-hybrid-7.0.3/example.conf
++# /usr/share/doc/ircd-hybrid-7.0.3/example.efnet.conf
++#
++
++#connect {
++        #name="some-b.server";
++        #host="1.2.3.5";
++        ##port=6677;
++        #send_password="abcd";
++        #accept_password="abcd";
++        #encrypted=no;
++        #class="server";
++        #autoconn=yes;
++        #hub_mask="*";
++#};
++
++#connect {
++        #name="ipv6.some.server";
++        #host="3ffd:dead:beef::1";
++        #send_password="password";
++        #accept_password="password";
++        #port=6666;
++
++        /* aftype: controls whether the connection uses "ipv4" or "ipv6".
++         * Default is ipv4.
++         */
++        #aftype=ipv6;
++        #class="server";
++#};
++
++#connect {
++         #name="encrypted.auth.example";
++         #host="some.host.somewhere";
++         #port=6667;
++
++        /* cryptlink: enable full encryption for all data passing between our
++         * server and this link and rsa authentication.
++         */
++         #cryptlink=yes;
++
++        /* rsa key: the path to the public keyfile of the server.  Used instead
++         * of passwords.
++         */
++         #rsa_public_key_file="/etc/ircd-hybrid/remote.server.keyfile";
++
++        /* cipher preference: set the preferred cipher for this link
++         *
++         * Available ciphers are:
++         *      BF/168 BF/128 CAST/128 IDEA/128 RC5.16/128
++         *      RC5.12/128 RC5.8/128 3DES/168 DES/56
++         *
++         * NOTE:  Some ciphers may not be supported by your OpenSSL.
++         *        Check the output from 'configure' for available ciphers.
++         *
++         * NOTE2: To help you decide what cipher to use, tools/encspeed
++         *        will show you approximately how fast each cipher is.
++         *        However, blowfish is fast and secure, and is probably
++         *        a good default for most situations.
++         *
++         * NOTE3: Default if none is set is BF/128
++         *
++         * The cipher *MUST* be the same in both directions.  If you
++         * set a cipher preference, your uplink must set the same cipher,
++         * else it will not link.
++        */
++       #cipher_preference="BF/168";
++#};
+diff -ur ircd-hybrid-7.2.2.old/include/defaults.h ircd-hybrid-7.2.2/include/defaults.h
+--- ircd-hybrid-7.2.2.old/include/defaults.h	2007-05-27 17:55:17.000000000 +0800
++++ ircd-hybrid-7.2.2/include/defaults.h	2007-05-27 18:01:15.000000000 +0800
+@@ -49,12 +49,13 @@
+ 
+ /* dirs */
+ #define DPATH       IRCD_PREFIX                                                     
+-#define BINPATH     IRCD_PREFIX "/bin/"
+-#define MSGPATH     IRCD_PREFIX "/messages/"
+-#define ETCPATH     IRCD_PREFIX "/etc"
+-#define LOGPATH     IRCD_PREFIX "/logs"
+-#define MODPATH     IRCD_PREFIX "/modules/"
+-#define AUTOMODPATH IRCD_PREFIX "/modules/autoload/"
++#define BINPATH     "/usr/sbin/"
++#define MSGPATH     "/usr/lib/ircd-hybrid/messages"
++#define ETCPATH     "/etc/ircd-hybrid"
++#define LOGPATH     "/var/log/ircd-hybrid"
++#define MODPATH     "/usr/lib/ircd-hybrid/modules"
++#define AUTOMODPATH MODPATH "/autoload"
++#define RUNPATH		"/var/run/ircd-hybrid"
+ 
+ /* files */
+ #define SPATH   BINPATH "/ircd"                 /* ircd executable */
+@@ -70,7 +71,7 @@
+ #define RKPATH  ETCPATH "/rkline.conf"
+ #define MPATH   ETCPATH "/ircd.motd"            /* MOTD file */
+ #define LPATH   LOGPATH "/ircd.log"             /* ircd logfile */
+-#define PPATH   ETCPATH "/ircd.pid"             /* pid file */
++#define PPATH   RUNPATH "/ircd-hybrid.pid"             /* pid file */
+ #define OPATH   ETCPATH "/opers.motd"           /* oper MOTD file */
+ #define LIPATH  ETCPATH "/links.txt"            /* cached links file */
+ 
