@@ -1,5 +1,2 @@
 sources:
-  "ircd-hybrid-7.2.3.tar.bz2:"	17be9aa90c6622036d3ef341d0db5ee79388f49d
-  "ircd-hybrid.init:"	cfa32f37b60f88d38de97e4b50508d02cc61d174
-  "ircd-hybrid.logrotate:"	bf8eaf96133f0e4fabd5a13fc3d06ff5694ab461
-  "ircd-hybrid.sysconfig:"	fe960e0066c98aaeef6f54a9d40a6a6c92c1a625
+  "ircd-hybrid-7.2.3.tar.bz2": 17be9aa90c6622036d3ef341d0db5ee79388f49d

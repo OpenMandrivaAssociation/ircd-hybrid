@@ -1,0 +1,68 @@
+#!/bin/sh
+#
+# ircd-hybrid		This shell script takes care of starting and stopping ircd.
+#
+# chkconfig: 345 97 13
+# description:	Internet Relay Chat Server.
+#
+# processname: ircd-hybrid
+# pidfile: /var/run/ircd-hybrid/ircd-hybrid.pid
+# config: /etc/sysconfig/network
+# config: /etc/ircd-hybrid/ircd.conf
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Source networking configuration.
+. /etc/sysconfig/network
+
+# Get service config
+[ -f /etc/sysconfig/ircd-hybrid ] && . /etc/sysconfig/ircd-hybrid
+
+# Check that networking is up.
+if [ ${NETWORKING} = "no" ]
+then
+	exit 0
+fi
+
+[ -f /usr/sbin/ircd-hybrid ] || exit 0
+
+# See how we were called.
+case "$1" in
+  start)
+	# Check if the service is already running?
+	if [ ! -f /var/lock/subsys/ircd-hybrid ]; then
+		# Start daemons.
+		echo -n "Starting IRCd Server:"
+		daemon --user=ircd-hybrid /usr/sbin/ircd-hybrid
+		echo
+		touch /var/lock/subsys/ircd-hybrid
+	else
+		echo "Already running IRCd Server"
+	fi
+	;;
+  stop)
+	# Check if the service is already running?
+	if [ -f /var/lock/subsys/ircd-hybrid ]; then
+		# Stop daemons.
+		echo -n "Stopping IRCd Server:"
+		killproc ircd-hybrid
+		echo
+		rm -f /var/run/ircd-hybrid/ircd-hybrid.pid /var/lock/subsys/ircd-hybrid >/dev/null 2>&1
+	else
+		echo "Already stopped IRCd Server"
+	fi
+	;;
+  status)
+  	status ircd-hybrid
+	;;
+  restart|force-reload)
+  	$0 stop
+	$0 start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart|force-reload|status}"
+	exit 1
+esac
+
+exit 0

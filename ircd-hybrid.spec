@@ -1,6 +1,6 @@
 %define name ircd-hybrid
 %define version 7.2.3
-%define release %mkrel 8
+%define release 9
 %define _messagesdir %{_libdir}/ircd-hybrid/messages
 
 # default: Don't build with IPv6 for production server
@@ -29,11 +29,10 @@ Patch3:		%{name}-7.2.3-fix-x86_64-build.patch
 Patch4:		%{name}-7.2.3-fix-module-path.patch
 Patch5:		ircd-hybrid-7.2.3-fix-str-fmt.patch
 Requires(post,postun):		rpm-helper update-alternatives
-BuildRoot:	%{_tmppath}/%{name}-%{version}-buildroot
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	openssl-devel	>= 0.9.7
-BuildRequires:	zlib-devel
+BuildRequires:	pkgconfig(openssl)	>= 0.9.7
+BuildRequires:	pkgconfig(zlib)
 BuildRequires:	elfutils-devel
 # Both have a 
 Conflicts:	ircd
@@ -72,7 +71,6 @@ Development headers and libraries for %{name}
 #%{__aclocal}
 #%{__autoconf}
 
-%serverbuild
 %configure2_5x \
 	--enable-zlib \
 	--enable-small-net \
@@ -85,7 +83,6 @@ Development headers and libraries for %{name}
 %make
 
 %install
-rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_libdir}/ircd-hybrid,%{_var}/{log/ircd-hybrid,run/ircd-hybrid},%{_sysconfdir}/{ircd-hybrid,rc.d/init.d,sysconfig,logrotate.d}} \
 	$RPM_BUILD_ROOT{%{_libdir}/ircd-hybrid/{modules{,/autoload},tools,help},%{_sbindir},%{_mandir}/man8,%{_localstatedir}/lib/ircd-hybrid} \
 	$RPM_BUILD_ROOT{%{_includedir}/%{name},%{_messagesdir},%{_messagesdir}/{ayb{,/LC_MESSAGES},custom{,/LC_MESSAGES}}}
@@ -167,9 +164,6 @@ rm -f %{_libdir}/ircd-hybrid/tools/viklines %{_libdir}/ircd-hybrid/tools/vimotd
 
 update-alternatives --remove ircd %{_sbindir}/ircd-hybrid
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
 %defattr(644,root,root,755)
 %doc doc/{*.txt,server-version-info,technical} Hybrid-team LICENSE BUGS RELNOTES TODO
@@ -199,4 +193,83 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_includedir}/%{name}
 %doc ChangeLog
+
+
+
+%changelog
+* Mon Dec 06 2010 Oden Eriksson <oeriksson@mandriva.com> 7.2.3-8mdv2011.0
++ Revision: 612408
+- the mass rebuild of 2010.1 packages
+
+* Wed Apr 28 2010 Funda Wang <fwang@mandriva.org> 7.2.3-7mdv2010.1
++ Revision: 539921
+- fix str fmt
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - rebuild
+
+  + Thomas Backlund <tmb@mandriva.org>
+    - fix typo in initscript
+
+* Thu Aug 07 2008 Thierry Vignaud <tv@mandriva.org> 7.2.3-6mdv2009.0
++ Revision: 267127
+- rebuild early 2009.0 package (before pixel changes)
+
+  + Pixel <pixel@mandriva.com>
+    - adapt to %%_localstatedir now being /var instead of /var/lib (#22312)
+
+  + Funda Wang <fwang@mandriva.org>
+    - fix bug#40445: ircd-hybrid cannot find core modules
+    - fix bug#40446: there is no need creating hardlink
+
+* Wed Jan 02 2008 Olivier Blin <oblin@mandriva.com> 7.2.3-4mdv2008.1
++ Revision: 140792
+- restore BuildRoot
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill re-definition of %%buildroot on Pixel's request
+
+* Mon Aug 27 2007 Funda Wang <fwang@mandriva.org> 7.2.3-4mdv2008.0
++ Revision: 71708
+- SILNET: bump release
+- add fedora patch to build on x86_64
+- Do not need bison and flex
+- disable patch2
+- Add patch from debian to build using flex and bison
+- New version
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill file require on update-alternatives
+
+* Sun Jun 03 2007 Funda Wang <fwang@mandriva.org> 7.2.2-3mdv2008.0
++ Revision: 34855
+- Shoulodn't conflict with itself
+
+* Sat Jun 02 2007 Adam Williamson <awilliamson@mandriva.org> 7.2.2-2mdv2008.0
++ Revision: 34727
+- rename manpage to avoid conflict with ircd (makes more sense this way anyway)
+
+* Sun May 27 2007 Funda Wang <fwang@mandriva.org> 7.2.2-1mdv2008.0
++ Revision: 31790
+- Add languages
+- fix file list
+- Don't use autotools
+- Rediff patch0
+- New version
+
+
+* Wed Mar 09 2005 Lenny Cartier <lenny@mandrakesoft.com> 7.0.3-2mdk
+- from Nenad Markovic <yapi@verat.net> : 
+	- correct patch0 (UID and GID stuff)
+	- remove/resort unneeded patches
+	- fix init script
+	- fix dir names
+
+* Fri Feb 25 2005 Nenad Markovic <yapi@verat.net> 7.0.3-1mdk
+- initial specfile based on RPM from PLD Team <feedback@pld.org.pl>
+- bz2 sources
+- build with automake-1.7
+- modify init script
+- devel package
+- EFnet and IPv6 support (optional)
 
