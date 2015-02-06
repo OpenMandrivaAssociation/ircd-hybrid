@@ -1,6 +1,6 @@
 %define name ircd-hybrid
 %define version 7.2.3
-%define release 9
+%define release 10
 %define _messagesdir %{_libdir}/ircd-hybrid/messages
 
 # default: Don't build with IPv6 for production server
