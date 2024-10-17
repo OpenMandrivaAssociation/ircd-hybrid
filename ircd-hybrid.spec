@@ -18,7 +18,7 @@ Release:	%{release}
 Summary:	Internet Relay Chat Server
 License:	GPL
 Group:		Networking/IRC
-URL: 		http://www.ircd-hybrid.org/
+URL: 		https://www.ircd-hybrid.org/
 Source0:	http://prdownloads.sf.net/ircd-hybrid/%{name}-%{version}.tar.bz2
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
