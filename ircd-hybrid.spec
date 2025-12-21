@@ -29,6 +29,8 @@ Patch3:		%{name}-7.2.3-fix-x86_64-build.patch
 Patch4:		%{name}-7.2.3-fix-module-path.patch
 Patch5:		ircd-hybrid-7.2.3-fix-str-fmt.patch
 Requires(post,postun):		rpm-helper update-alternatives
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	pkgconfig(openssl)	>= 0.9.7
